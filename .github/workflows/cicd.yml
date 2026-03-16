@@ -1,0 +1,25 @@
+name: DevOps CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Image
+        run: docker build -t veerase/devops-app:${{ github.sha }} -f docker/Dockerfile .
+
+      - name: Push Image
+        run: docker push veerase/devops-app:${{ github.sha }}
