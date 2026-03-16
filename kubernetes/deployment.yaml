@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: devops-container
-          image: veerase/devops-app:v1
+          image: veerase/devops-app:e103c69bb14bbc95d2f7c4a77929c6d5ff5c42f8
           ports:
             - containerPort: 3000
