@@ -1,4 +1,4 @@
-name: DevOps CI Pipeline
+name: DevOps CI-CD Pipeline
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,3 +23,15 @@ jobs:
 
       - name: Push Image
         run: docker push veerase/devops-app:${{ github.sha }}
+
+      - name: Update Deployment Manifest
+        run: |
+          sed -i "s|image:.*|image: veerase/devops-app:${{ github.sha }}|g" kubernetes/deployment.yaml
+
+      - name: Commit Updated Manifest
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Auto update image tag"
+          git push
